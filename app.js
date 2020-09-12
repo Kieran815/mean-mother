@@ -7,7 +7,7 @@ var mongoose = require('mongoose');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-// import the route into the apiUsersRouter variable
+// import the `users` routes as `apiUsersRouter` variable
 var apiUsersRouter = require('./routes/api/users');
 
 var app = express();
@@ -16,7 +16,7 @@ var app = express();
 //  config file for mongodb location
 var config = require('./config.dev');
 // connect app with mongodb
-mongoose.connect(config.mongodb, { useNewUrlParser: true })
+mongoose.connect(config.mongodb, { useNewUrlParser: true });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,7 +30,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
+// any URL that starts with `/api/users` will look into
+// `the /api/users.js` (imported as `apiUsersRouter`)
+// file to complete the request.
+app.use('/api/users', apiUsersRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
