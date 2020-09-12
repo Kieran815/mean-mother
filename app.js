@@ -7,6 +7,8 @@ var config = require('./config.dev');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+// import the route into the apiUsersRouter variable
+var apiUsersRouter = require('./routes/api/users');
 
 var app = express();
 
@@ -29,6 +31,9 @@ app.use('/users', usersRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+// then bind that route to a URL endpoint
+app.use('/api/users', apiUsersRouter);
 
 // error handler
 app.use(function(err, req, res, next) {
