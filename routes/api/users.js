@@ -16,11 +16,14 @@
 
 var express = require('express');
 var router = express.Router();
+// import Users model to compare input values against
+var Users = require('../../models/users');
 
 // The following will resolve any `GET` requests to
 //  `/api/users/` to the `router.get()` method
 router.get('/', function(req, res, next) {
-  res.json({success: true});
+  // res.json({success: true});
+  Users.find({})
 });
 
 
