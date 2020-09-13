@@ -12,10 +12,13 @@ var router = express.Router();
 // import Users model to compare input values against
 var Users = require('../../models/users');
 
+
+/* *** GET ALL RECORDS *** */
 // read: GET request that returns a list of user records
 // The following will resolve any `GET` requests to
-//  `/api/users/` to the `router.get()` method
+// `/api/users/` to the `router.get()` method
 router.get('/', function(req, res, next) {
+  console.log('Success!')
   // res.json({success: true});
   Users.find({}, function(err, users) {
     if (err) {
@@ -26,6 +29,48 @@ router.get('/', function(req, res, next) {
 });
 
 
+/* *** GET ONE RECORD *** */
+// read: GET request that returns a single user record
+//  this example uses `userId`
+router.get('/:userId', function(req, res) {
+  var userId = req.params.userId;
+  Users.findOne({'_id': userId}, function(err, user) {
+    if(err) {
+      return res.json({'success': false, 'error': err});
+    }
+    return res.json({'success': true, 'user': user});
+  });
+});
+
+
+/* *** POST NEW RECORD *** */
+// create: `POST` request that creates a user
+// Sending a json payload over a `POST` request to the
+// 'api/users` endpoint shall create a new user record.
+
+// router sends `post` request with data built off of
+// `user` model
+
+// `req.body.val` represents input values
+// from the user.
+router.post('/', function(req, res) {
+  Users.create(new Users({
+    username: req.body.username,
+    email: req.body.email,
+    first_name: req.body.first_name,
+    last_name: req.body.last_name
+  }), function(err, user) {
+    if (err) {
+      return res.json({success: false, 'error': err});
+    }
+    return res.json({success: true, user: user});
+  });
+});
+
 
 // tells express to `export` functions inside this module
 module.exports = router;
+
+
+// edit statement I used to update data in mongodb
+// db.users.update({ "_id" : ObjectId("5f5d3d6d59bc7f4c4b66c014")}, {"admin": true, "username" : "testuser", "email" : "kieran.milligan@gmail.com", "first_name" : "Kieran", "last_name" : "Milligan", "__v" : 0 });
