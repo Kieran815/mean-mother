@@ -80,12 +80,13 @@ router.put('/', function(req, res) {
   Users.findOne({'_id': req.body._id}, function(err, user) {
     if (err) {
       return res.json({success: false, error: err});
-    }
-
+    } else if (user) {
+    // CONDITIONAL CALLBACKS
     // if user is found, check req.body and update
     // `user` values (`user.key`) if `data.val` is
     // included in the request
-    if (user) {
+    // nested `if` statements
+    // if (user) {
       let data = req.body;
 
       if (data.username) {
