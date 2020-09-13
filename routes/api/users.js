@@ -118,11 +118,52 @@ router.put('/', function(req, res) {
 });
 
 
+/* *** DELETE RECORD *** */
+// delete: delete request that removes existing user
+
+// Accessing the route `/api/users/:userId` (for which
+// `:userId` is the `id` of a known user) using a
+// `DELETE` request shall delete the user with that id.
+router.delete('/:userId', function(req, res) {
+  var userId = req.params.userId;
+
+  Users.remove({'_id': userId}, function(err, removed) {
+    if (err) {
+      return res.json({success: false, error: err});
+    }
+    return res.json({success: true, status: removed});
+  });
+});
 
 
 // tells express to `export` functions inside this module
 module.exports = router;
 
+/* *** END OF CRUD *** */
 
+
+
+/* *** SAVING IN CASE I FUCKED UP *** */
 // edit statement I used to update data in mongodb
+// also set `admin` to `true`
 // db.users.update({ "_id" : ObjectId("5f5d3d6d59bc7f4c4b66c014")}, {"admin": true, "username" : "testuser", "email" : "kieran.milligan@gmail.com", "first_name" : "Kieran", "last_name" : "Milligan", "__v" : 0 });
+
+
+// CREATE TEST (2 Instances)
+// curl -d '{"email":"test2@example.com", "username":"testuser2", "first_name": "Bob", "last_name": "smith"}' -H "Content-Type: application/json" -X POST http://localhost:3000/api/users
+// curl -d '{"email":"test3@example.com", "username":"testuser3", "first_name": "Sally", "last_name": "Smith"}' -H "Content-Type: application/json" -X POST http://localhost:3000/api/users
+
+
+// READ ALL TEST
+// curl -H "Content-Type: application/json" -X GET http://localhost:3000/api/users/
+
+
+// READ ONE TEST
+// curl -H "Content-Type: application/json" -X GET http://localhost:3000/api/users/${userId}
+
+
+// UPDATE TEST
+// curl -d '{"_id":"${userId}", "first_name":"Robert"}' -H "Content-Type: application/json" -X PUT http://localhost:3000/api/users
+
+// DELETE TEST
+// curl -H "Content-Type: application/json" -X DELETE http://localhost:3000/api/users/${userId}
