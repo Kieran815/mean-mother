@@ -105,7 +105,10 @@ router.put('/', function(req, res) {
       };
 
       // Mongoose provides a `save()` function that will
-      // take a JSON object and store it in the database.
+      // take a JSON object and store it in the database
+      // If you load an existing document from the
+      // database and modify it, save() updates the
+      // existing document
       user.save(function(err) {
         if (err) {
           return res.json({success: false, error: err});

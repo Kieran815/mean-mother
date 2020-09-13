@@ -25,8 +25,27 @@ var Users = new Schema({
   admin: {
     type: Boolean,
     default: false
+  },
+  // Creating a new user shall automatically populate
+  // created and modified dates.
+  created: {
+    type: Date,
+    default: Date.now
+  },
+  modified: {
+    type: Date,
+    default: Date.now
   }
+
 });
+
+// Modifying an existing user shall automatically
+// update the modified date.
+Users.pre('save', function(next) {
+  this.modified = new Date().toISOString();
+  next();
+});
+
 
 // apply validator props to model
 // see mongoose-unique-validator npm page
