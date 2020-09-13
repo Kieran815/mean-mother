@@ -14,11 +14,10 @@ var Users = require('../../models/users');
 
 
 /* *** GET ALL RECORDS *** */
-// read: GET request that returns a list of user records
+// read: `GET` request that returns list of user records
 // The following will resolve any `GET` requests to
 // `/api/users/` to the `router.get()` method
 router.get('/', function(req, res, next) {
-  console.log('Success!')
   // res.json({success: true});
   Users.find({}, function(err, users) {
     if (err) {
@@ -30,7 +29,7 @@ router.get('/', function(req, res, next) {
 
 
 /* *** GET ONE RECORD *** */
-// read: GET request that returns a single user record
+// read: `GET` request that returns a single user record
 //  this example uses `userId`
 router.get('/:userId', function(req, res) {
   var userId = req.params.userId;
@@ -51,8 +50,7 @@ router.get('/:userId', function(req, res) {
 // router sends `post` request with data built off of
 // `user` model
 
-// `req.body.val` represents input values
-// from the user.
+// `req.body.val` represents input values from the user.
 router.post('/', function(req, res) {
   Users.create(new Users({
     username: req.body.username,
@@ -66,6 +64,60 @@ router.post('/', function(req, res) {
     return res.json({success: true, user: user});
   });
 });
+
+
+/* *** UPDATE EXISTING RECORD *** */
+// update: `PUT` request that updates existing record
+
+// Sending a json payload with an id, over a `PUT`
+// request to the `api/users` endpoint shall update an
+// existing user record.
+
+// again, `req.body` represents input values
+// from the user.
+router.put('/', function(req, res) {
+  // search for selected user based on userId
+  Users.findOne({'_id': req.body._id}, function(err, user) {
+    if (err) {
+      return res.json({success: false, error: err});
+    }
+
+    // if user is found, check req.body and update
+    // `user` values (`user.key`) if `data.val` is
+    // included in the request
+    if (user) {
+      let data = req.body;
+
+      if (data.username) {
+        user.username = data.username;
+      };
+
+      if (data.email) {
+        user.email = data.email;
+      };
+
+      if (data.first_name) {
+        user.first_name = data.first_name;
+      };
+
+      if (data.last_name) {
+        user.last_name = data.last_name;
+      };
+
+      // Mongoose provides a `save()` function that will
+      // take a JSON object and store it in the database.
+      user.save(function(err) {
+        if (err) {
+          return res.json({success: false, error: err});
+        } else {
+          return res.json({success: true, user:user});
+        }
+      });
+    }
+  });
+});
+
+
 
 
 // tells express to `export` functions inside this module
