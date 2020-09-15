@@ -78,15 +78,57 @@ app.use(function(req, res, next) {
 });
 
 
+/* *** SESSION-BASED ACCESS CONTROL *** */
+app.use(function(req, res, next) {
+  /* *** ALLOW ACCESS TO EVERYTHING *** */
+  /* (used heavily in later lessons) */
+  // return next();
+
+  // array of universal access to endpoints
+  // (exact matches only)
+  var whitelist = [
+    '/',
+    '/auth'
+  ];
+
+  // if requested endpoint is ON the whitelist...
+  if(whitelist.indexOf(req.url) !== -1) {
+    // allow access
+    return next();
+  }
+
+  // allow access to dynamic endpoints
+  var subs = [
+    '/public/',
+    '/api/auth/'
+  ];
+
+  // allow access to sub-routes (i.e. - `/api/auth/login` or `/api/auth/logout`)
+  for (var sub of subs) {
+    if(req.url.substring(0, sub.length) === sub) {
+      return next();
+    }
+  }
+
+  // allow user to access ALL ENDPOINTS
+  if (req.isAuthenticated()) {
+    return next();
+  }
+
+  // default: if no other criteria met (no session,
+  // no whitelist, etc), redirect to `login` page
+  return res.redirect('/auth#login')
+})
+
 app.use('/', indexRouter);
+app.use('/auth', authRouter);
 app.use('/users', usersRouter);
+app.use('/api/auth', apiAuthRouter);
 // any URL that starts with `/api/users` will look into
 // `the /api/users.js` (imported as `apiUsersRouter`)
 // file to complete the request.
 // then bind that route to a URL endpoint
-app.use('/api/auth', apiAuthRouter);
 app.use('/api/users', apiUsersRouter);
-app.use('/auth', authRouter)
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
