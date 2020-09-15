@@ -7,19 +7,19 @@ var mongoose = require('mongoose');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var passport = require('passport');
-
 // Require/Use Passport Local Strategy, defined in user model
 var LocalStrategy = require('passport-local').Strategy;
 var Users = require('./models/users');
-
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 // import the `users` routes as `apiUsersRouter` variable
 var apiUsersRouter = require('./routes/api/users');
+// import auth routes
+var apiAuthRouter = require('./routes/api/auth');
+
 
 var app = express();
-
 /* **** DATABASE CONNECTION **** */
 //  config file for mongodb location
 var config = require('./config.dev');
@@ -56,6 +56,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 // call passport with users strategy
 passport.use(Users.createStrategy());
+
 passport.serializeUser(function(user, done) {
   done(null, {
     id: user._id,
@@ -76,14 +77,13 @@ app.use('/users', usersRouter);
 // any URL that starts with `/api/users` will look into
 // `the /api/users.js` (imported as `apiUsersRouter`)
 // file to complete the request.
+// then bind that route to a URL endpoint
+app.use('/api/auth', apiAuthRouter);
 app.use('/api/users', apiUsersRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
-// then bind that route to a URL endpoint
-app.use('/api/users', apiUsersRouter);
 
 // error handler
 app.use(function(err, req, res, next) {

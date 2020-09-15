@@ -64,8 +64,7 @@ Users.pre('save', function(next) {
 
 // apply validator props to model
 // see mongoose-unique-validator npm page
-// Users.plugin(uniqueValidator);
+Users.plugin(uniqueValidator);
 Users.plugin(passportLocalMongoose)
-
 
 module.exports = mongoose.model("Users", Users);
