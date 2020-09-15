@@ -4,6 +4,7 @@ var router = express.Router();
 var Users = require('../../models/users');
 var passport = require('passport');
 
+// NEW USER REGISTRATION (POST TO DB)
 router.post('/register', function(req,res,next){
   var data = req.body;
 
@@ -29,6 +30,7 @@ router.post('/register', function(req,res,next){
   });
 });
 
+// USER LOGIN
 router.post('/login', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
     if (err) {
@@ -46,6 +48,18 @@ router.post('/login', function(req, res, next) {
       return res.json({success: true, user: user});
     });
   })(req, res, next);
+});
+
+// USER LOG OUT
+router.delete('/logout', function(req, res) {
+  // destroy session cookie
+  req.session.destroy(function(err) {
+    if (err) {
+      return res.json({success: 'false'});
+    } else {
+      return res.json({success: 'true'})
+    }
+  });
 });
 
 module.exports = router;
