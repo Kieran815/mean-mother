@@ -3,7 +3,8 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  // add a non-API endpoint
+  res.render('users/app', {title: 'User Management'});
 });
 
 module.exports = router;
