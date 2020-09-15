@@ -8,6 +8,11 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var passport = require('passport');
 
+// Require/Use Passport Local Strategy, defined in user model
+var LocalStrategy = require('passport-local').Strategy;
+var Users = require('./models/users');
+
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 // import the `users` routes as `apiUsersRouter` variable
@@ -49,6 +54,8 @@ app.use(require('express-session')({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+// call passport with users strategy
+passport.use(Users.createStrategy());
 passport.serializeUser(function(user, done) {
   done(null, {
     id: user._id,
