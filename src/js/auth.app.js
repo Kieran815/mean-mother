@@ -51,17 +51,18 @@ var authApp = (function() {
         object[key] = value;
       });
       // error/success messaging
-      if(data.success===true){
-        window.location.href = '/';
-      }else{
-        document.getElementById('formMsg').style.display='block';
-      }      
+     
       // convert and send object to JSON string
       xhr.send(JSON.stringify(object));
       xhr.onload = function() {
         // change XHR res to a JSON object
         let data = JSON.parse(xhr.response);
         console.log(data);
+        if(data.success===true){
+          window.location.href = '/';
+        }else{
+          document.getElementById('formMsg').style.display='block';
+        } 
       }
     });
   }

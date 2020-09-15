@@ -52,14 +52,20 @@ router.post('/login', function(req, res, next) {
 
 // USER LOG OUT
 router.delete('/logout', function(req, res) {
+  req.logout();
+  // check logout status
+  if(!req.session.passport.user) {
+    return res.json({success: 'true'});
+  }
+  return res.json({success: 'false'});
   // destroy session cookie
-  req.session.destroy(function(err) {
-    if (err) {
-      return res.json({success: 'false'});
-    } else {
-      return res.json({success: 'true'})
-    }
-  });
+  // req.session.destroy(function(err) {
+  //   if (err) {
+  //     return res.json({success: 'false'});
+  //   } else {
+  //     return res.json({success: 'true'})
+  //   }
+  // });
 });
 
 module.exports = router;

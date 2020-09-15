@@ -26,6 +26,8 @@ next - tells the current request to move to the next piece of middleware.
 */
 
 router.get('/', function(req, res, next) {
+  // verify session data
+  console.log(req.session);
   /* render() renders a view and serves it to the user. The first argument is the view's directory path. the second is a JSON object. This object holds a list of key-to-value pairs that get passed into the view/layout. Calling res.render('index', { title: 'Express', name: 'YOUR-NAME'}); pass two variables title and name into the view files and build the HTML document that will be served to the user */
   res.render('index', { title: 'My Portfolio', name: "Kieran" });
 });
