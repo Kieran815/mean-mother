@@ -5,7 +5,7 @@ var Users = require('../../models/users');
 var passport = require('passport');
 
 // NEW USER REGISTRATION (POST TO DB)
-router.post('/register', function(req,res,next){
+router.post('/register', function(req, res, next){
   var data = req.body;
 
   Users.register(new Users({
@@ -44,7 +44,7 @@ router.post('/login', function(req, res, next) {
       if (err) {
         return res.json({success: false, error: err});
       }
-      console.log(req.session);
+      // console.log(req.session);
       return res.json({success: true, user: user});
     });
   })(req, res, next);

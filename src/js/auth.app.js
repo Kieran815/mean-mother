@@ -1,9 +1,9 @@
 var authApp = (function() {
 
-  function loginForm(){
+  function loginForm() {
     let app = document.getElementById('app');
 
-    let form =  `
+    let form = `
       <div class="card login-form">
         <form id="loginForm" class="card-body">
           <h1 class="card-title text-center">Please Sign In</h1>
@@ -23,56 +23,47 @@ var authApp = (function() {
       </div>
     `;
 
-    app.innerHTML=form;
+    app.innerHTML = form;
   }
 
-  function registrationForm(){
+  function registrationForm() {
     var app = document.getElementById('app');
 
-    var form =  `
-
-        <div class="card login-form">
-          <form id="registrationForm" class="card-body">
-            <h1 class="card-title text-center">Create an Account</h1>
-            <div id="formMsg" class="alert alert-danger text-center">Your form has errors</div>
-
-            <div class="form-group">
-              <label for="first_name">First Name</label>
-              <input type="text" id="first_name" name="first_name" class="form-control" required>
-            </div>
-
-            <div class="form-group">
-              <label for="last_name">Last Name</label>
-              <input type="text" id="last_name" name="last_name" class="form-control" required>
-            </div>
-
-            <div class="form-group">
-              <label for="username">Username</label>
-              <input type="text" id="username" name="username" class="form-control" required>
-            </div>
-
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" class="form-control" required>
-            </div>
-
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input type="password" id="password" name="password" class="form-control" required>
-            </div>
-
-            <div class="form-group">
-              <label for="confirm_password">Confirm Password</label>
-              <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
-            </div>
-
-            <div>
-              <input type="submit" value="Sign In" class="btn btn-lg btn-primary btn-block">
-            </div>
-          </form>
-        </div>
+    var form = `
+      <div class="card login-form">
+        <form id="registrationForm" class="card-body">
+          <h1 class="card-title text-center">Create an Account</h1>
+          <div id="formMsg" class="alert alert-danger text-center">Your form has errors</div>
+          <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" name="first_name" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" name="last_name" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+          </div>
+          <div>
+            <input type="submit" value="Sign In" class="btn btn-lg btn-primary btn-block">
+          </div>
+        </form>
+      </div>
     `;
-
     app.innerHTML=form;
   }
 
@@ -100,17 +91,17 @@ var authApp = (function() {
       formData.forEach(function(value, key) {
         object[key] = value;
       });
+      
       // error/success messaging
-     
       // convert and send object to JSON string
       xhr.send(JSON.stringify(object));
       xhr.onload = function() {
         // change XHR res to a JSON object
         let data = JSON.parse(xhr.response);
-        console.log(data);
+        // console.log(data);
         if(data.success===true){
           window.location.href = '/';
-        }else{
+        } else {
           document.getElementById('formMsg').style.display='block';
         } 
       }
@@ -124,36 +115,38 @@ var authApp = (function() {
   // access to everything that is outside of the return
   // statement.
   return {
-    load: function() {
+    load: function(){
       // commented out, implemented to switch statement
       // registrationForm();
       // postRequest('registrationForm', '/api/auth/login');
       // // form validation
       // validate.registrationForm();
-      switch(window.location.hash) {
+      switch(window.location.hash){
         case '#register':
           registrationForm();
           postRequest('registrationForm', '/api/auth/register');
           validate.registrationForm();
           break;
+
         default:
           loginForm();
-          postRequest('loginForm', 'api/auth/login');
+          postRequest('loginForm', '/api/auth/login');
           break;
       }
     }
   }
+
 })();
 
 var validate = (function() {
   function confirmPasswordMatch() {
-    let pswd = document.getElementById('password');
-    let cpswd = document.getElementById('confirm_password');
+    let pw = document.getElementById('password');
+    let cpw = document.getElementById('confirm_password');
 
-    if (pswd.value !== cpswd.value) {
-      cpswd.setCustomValidity("Passwords Do Not Match");
+    if (pw.value !== cpw.value) {
+      cpw.setCustomValidity("Passwords Do Not Match");
     } else {
-      cpswd.setCustomValidity('');
+      cpw.setCustomValidity("");
     }
   }
 
@@ -164,7 +157,7 @@ var validate = (function() {
         function() {
           confirmPasswordMatch();
         }
-      )
+      );
     }
   }
 })();

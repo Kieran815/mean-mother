@@ -11,13 +11,13 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var Users = require('./models/users');
 
+var authRouter = require('./routes/auth');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-// import the `users` routes as `apiUsersRouter` variable
-var apiUsersRouter = require('./routes/api/users');
 // import auth routes
 var apiAuthRouter = require('./routes/api/auth');
-var authRouter = require('./routes/auth');
+// import the `users` routes as `apiUsersRouter` variable
+var apiUsersRouter = require('./routes/api/users');
 
 
 var app = express();
@@ -105,7 +105,7 @@ app.use(function(req, res, next) {
 
   // allow access to sub-routes (i.e. - `/api/auth/login` or `/api/auth/logout`)
   for (var sub of subs) {
-    if(req.url.substring(0, sub.length) === sub) {
+    if(req.url.substring(0, sub.length)===sub) {
       return next();
     }
   }
@@ -130,7 +130,7 @@ app.use('/api/auth', apiAuthRouter);
 // then bind that route to a URL endpoint
 app.use('/api/users', apiUsersRouter);
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function(err, req, res, next) {
   next(createError(404));
 });
 
