@@ -125,10 +125,22 @@ var authApp = (function() {
   // statement.
   return {
     load: function() {
-      registrationForm();
-      postRequest('registrationForm', '/api/auth/login');
-      // form validation
-      validate.registrationForm();
+      // commented out, implemented to switch statement
+      // registrationForm();
+      // postRequest('registrationForm', '/api/auth/login');
+      // // form validation
+      // validate.registrationForm();
+      switch(window.location.hash) {
+        case '#register':
+          registrationForm();
+          postRequest('registrationForm', '/api/auth/register');
+          validate.registrationForm();
+          break;
+        default:
+          loginForm();
+          postRequest('loginForm', 'api/auth/login');
+          break;
+      }
     }
   }
 })();
@@ -160,3 +172,8 @@ var validate = (function() {
 // Calling authApp.load(); from outside the closure
 // will execute the `loginForm()` logic.
 authApp.load();
+
+// set up navigation using hash tag via switch stmnt
+window.addEventListener("hashchange", function(){
+  authApp.load();
+});
