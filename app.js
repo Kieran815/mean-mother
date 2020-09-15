@@ -31,6 +31,25 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// session and cookie initialization
+app.use(require('express-session')({
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection
+  }),
+  secret: config.session.secret,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    path: '/',
+    domain: config.cookie.domain,
+    // httpOnly: true,
+    // secure: true,
+    maxAge: 3600000 // 1hr
+  }
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 // any URL that starts with `/api/users` will look into
