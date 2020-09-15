@@ -26,6 +26,41 @@ var authApp = (function() {
     app.innerHTML=form;
   }
 
+  // write a method that allows us to make a post
+  // request via AJAX.
+  function postRequest(formId, url) {
+    // select form and add listener
+    let form = document.getElementById(formId);
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      // assign form to new `FormData` object
+      let formData = new FormData(form);
+      // generic route to make form reusable
+      let uri = `${window.location.origin}${url}`;
+      let xhr = new XMLHttpRequest();
+      // Post to db via XHR
+      xhr.open('POST', uri);
+      // post meta-headers
+      xhr.setRequestHeader(
+        'Content-Type',
+        'application/json; charset=UTF-8'
+      );
+      // push `formData` key/value pairs to blank object
+      let object = {};
+      formData.forEach(function(value, key) {
+        object[key] = value;
+      });
+      // convert and send object to JSON string
+      xhr.send(JSON.stringify(object));
+      xhr.onload = function() {
+        // change XHR res to a JSON object
+        let data = JSON.parse(xhr.response);
+        console.log(data);
+      }
+    });
+  }
+
+
   // Add a return statement to your closure. This
   // statement will return a JSON object that is
   // accessible outside of the closure and will have
@@ -34,6 +69,7 @@ var authApp = (function() {
   return {
     load: function() {
       loginForm();
+      postRequest('loginForm', '/api/auth/login');
     }
   }
 
