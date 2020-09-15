@@ -71,6 +71,11 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
+// expose session data to the views
+app.use(function(req, res, next) {
+  res.locals.session = req.session;
+  next();
+});
 
 
 app.use('/', indexRouter);
