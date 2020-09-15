@@ -126,10 +126,35 @@ var authApp = (function() {
   return {
     load: function() {
       registrationForm();
-      postRequest('loginForm', '/api/auth/login');
+      postRequest('registrationForm', '/api/auth/login');
+      // form validation
+      validate.registrationForm();
+    }
+  }
+})();
+
+var validate = (function() {
+  function confirmPasswordMatch() {
+    let pswd = document.getElementById('password');
+    let cpswd = document.getElementById('confirm_password');
+
+    if (pswd.value !== cpswd.value) {
+      cpswd.setCustomValidity("Passwords Do Not Match");
+    } else {
+      cpswd.setCustomValidity('');
     }
   }
 
+  return {
+    registrationForm: function() {
+      document.querySelector('#registrationForm input[type="submit"]').addEventListener(
+        'click',
+        function() {
+          confirmPasswordMatch();
+        }
+      )
+    }
+  }
 })();
 
 // Calling authApp.load(); from outside the closure
