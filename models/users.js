@@ -7,7 +7,7 @@ var Schema = mongoose.Schema;
 // pre-save validation for unique fields within a
 // Mongoose schema.
 var uniqueValidator = require('mongoose-unique-validator');
-
+var passportLocalMongoose = require('passport-local-mongoose');
 // 
 var Users = new Schema({
   email: {
@@ -35,6 +35,21 @@ var Users = new Schema({
   modified: {
     type: Date,
     default: Date.now
+  },
+  // require hash and salt for session mgmt
+  hash: {
+    type: String,
+    required: [
+      true,
+      'Issue Creating Password'
+    ]
+  },
+  salt: {
+    type: String,
+    required: [
+      true,
+      'Issue Creating Password'
+    ]
   }
 
 });
@@ -49,6 +64,7 @@ Users.pre('save', function(next) {
 
 // apply validator props to model
 // see mongoose-unique-validator npm page
-Users.plugin(uniqueValidator);
+// Users.plugin(uniqueValidator);
+Users.plugin(passportLocalMongoose)
 
 module.exports = mongoose.model("Users", Users);
