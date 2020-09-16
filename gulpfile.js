@@ -57,13 +57,6 @@ gulp.task('build-users-js', function() {
   return merge(userApp);
 });
 
-//Compile all JS tasks
-gulp.task('build-js', gulp.series(
-  'build-main-js',
-  'build-auth-js',
-  'build-users-js'
-));
-
 //Recompile SCSS/JS on save
 gulp.task('watch', function(){
   gulp.watch('./src/scss/**/*.scss', gulp.series('build-css'));
@@ -77,7 +70,9 @@ gulp.task('default', gulp.series('watch'));
 gulp.task('build-css', gulp.series('build-main-css'));
 
 //Compile all JS tasks
+//Compile all JS tasks
 gulp.task('build-js', gulp.series(
-    'build-main-js',
-    'build-auth-js',
-  ));
+  'build-main-js',
+  'build-auth-js',
+  'build-users-js'
+));
