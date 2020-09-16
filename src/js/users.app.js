@@ -60,7 +60,8 @@ var usersApp = (function() {
 
   function createUser(){
     var app = document.getElementById('app');
-    var form =  `
+
+    var form = `
       <div class="card">
         <div class="card-header clearfix">
           <h2 class="h3 float-left">Create a New User</h2>
@@ -69,7 +70,7 @@ var usersApp = (function() {
           </div>
         </div>
         <div class="card-body">
-          <form id="registrationForm" class="card-body">
+          <form  id="createUser" class="card-body">
             <div id="formMsg" class="alert alert-danger text-center">Your form has errors</div>
 
             <div class="row">
@@ -103,10 +104,42 @@ var usersApp = (function() {
         </div>
       </div>
     `;
-      app.innerHTML=form;
+
+    app.innerHTML=form;
+  }
+
+    // add a common method for processing web forms
+    function postRequest(formId, url) {
+      let form = document.getElementById(formId);
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        // make a new object from the submitted form
+        let formData = new FormData(form);
+        let uri = `${window.location.origin}${url}`;
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', uri);
+
+        xhr.setRequestHeader(
+          "Content-Type",
+          'application/json; charset = UTF-8'
+        );
+
+        let object = {};
+        formData.forEach(function(value, key) {
+          object[key] = value;
+        });
+
+        xhr.send(JSON.stringify(object));
+        xhr.onload = function() {
+          let data = JSON.parse(xhr.response);
+          if (data.success === true) {
+            window.location.href = '/';
+          } else {
+            document.getElementById('formMsg').style.display = 'block';
+          }
+        }
+      });
     }
-
-
 
 
 
@@ -117,8 +150,9 @@ var usersApp = (function() {
       let hashArray = hash.split('-');
 
       switch(hashArray[0]) {
-        case "#create":
+        case '#create':
           createUser();
+          postRequest('createUser', '/api/users');
           break;
         case "#view":
           console.log("view");
@@ -139,3 +173,7 @@ var usersApp = (function() {
 })();
 
 usersApp.load();
+// listener for switch statement based on hash value
+window.addEventListener("hashchange", function(){
+  usersApp.load();
+})
