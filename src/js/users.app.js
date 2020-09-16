@@ -246,7 +246,73 @@ var usersApp = (function() {
     });
   }
 
+  // confirm card before actually deleting the user
+  function deleteCard(id) {
+    let uri = `${window.location.origin}/api/users/${id}`;
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', uri);
 
+    xhr.setRequestHeader(
+      'Content-Type',
+      'application/json; charset = UTF-8'
+    );
+
+    xhr.send();
+
+    xhr.onload = function() {
+      let app = document.getElementById('app');
+      let data = JSON.parse(xhr.response);
+      let card = '';
+
+      card = `<div class="card bg-transparent border-danger text-danger bg-danger">
+        <div class="card-header bg-transparent border-danger">
+          <h2 class="h3 text-center">Your About to Delete a User</h2>
+        </div>
+        <div class="card-body text-center">
+          <div>
+            Are you sure you want to delete
+            <strong>${data.user.first_name} ${data.user.last_name}</strong>
+          </div>
+
+          <div>Username: <strong>${data.user.username}</strong></div>
+          <div>Email: <strong>${data.user.email}</strong></div>
+
+          <div class="text-center">
+            <br>
+            <a onclick="usersApp.deleteUser('${data.user._id}');" class="btn btn-lg btn-danger text-white">
+              Yes delete ${data.user.username}
+            </a>
+          </div>
+
+        </div>
+      </div>`;
+
+      app.innerHTML = card;
+    }
+  }
+
+  // actual method to delete user
+  function deleteUser(id) {
+    let uri = `${window.location.origin}/api/users/${id}`;
+    xhr = new XMLHttpRequest();
+    xhr.open('DELETE', uri);
+
+    xhr.setRequestHeader(
+      'Content-Type',
+      'application/json; charset = UTF-8'
+    );
+
+    xhr.send();
+
+    xhr.onload = function() {
+      let data = JSON.parse(xhr.response);
+      if (data.success === true) {
+        window.location.hash = '#';
+      } else {
+        alert('An Error Occurred. User Not Deleted.')
+      }
+    }
+  }
 
   return {
     load: function() {
@@ -266,13 +332,16 @@ var usersApp = (function() {
           editUser(hashArray[1]);
           break;
         case "#delete":
-          console.log("delete");
+          deleteCard(hashArray[1]);
           break;
 
         default:
           viewUsers();
           break;
       }
+    },
+    deleteUser: function(id) {
+      deleteUser(id);
     }
   }
 })();
