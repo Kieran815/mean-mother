@@ -60,7 +60,27 @@ var usersApp = (function() {
   return {
     load: function() {
       // alert('LOADED')
-      viewUsers();
+      let hash = window.location.hash;
+      let hashArray = hash.split('-');
+
+      switch(hashArray[0]) {
+        case "#create":
+          console.log('create');
+          break;
+        case "#view":
+          console.log("view");
+          break;
+        case "#edit":
+          console.log('edit');
+          break;
+        case "#delete":
+          console.log("delete");
+          break;
+
+        default:
+          viewUsers();
+          break;
+      }
     }
   }
 })();
