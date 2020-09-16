@@ -203,14 +203,18 @@ var usersApp = (function() {
             </form>
           </div>
         </div>
+        <div>
+          <a href="#delete-${data.user._id}" class="text-danger">Delete</a>
+        </div>
       `;
 
       app.innerHTML=form;
+      processRequest('editUser', '/api/users', 'PUT')
     }
   }
 
   // add a common method for processing web forms
-  function postRequest(formId, url) {
+  function processRequest(formId, url, method) {
     let form = document.getElementById(formId);
     form.addEventListener('submit', function(e) {
       e.preventDefault();
@@ -218,7 +222,7 @@ var usersApp = (function() {
       let formData = new FormData(form);
       let uri = `${window.location.origin}${url}`;
       let xhr = new XMLHttpRequest();
-      xhr.open('POST', uri);
+      xhr.open(method, uri);
 
       xhr.setRequestHeader(
         "Content-Type",
@@ -253,7 +257,7 @@ var usersApp = (function() {
       switch(hashArray[0]) {
         case '#create':
           createUser();
-          postRequest('createUser', '/api/users');
+          processRequest('createUser', '/api/users', 'POST');
           break;
         case "#view":
           viewUser(hashArray[1]);
