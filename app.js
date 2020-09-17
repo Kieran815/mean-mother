@@ -10,14 +10,17 @@ var passport = require('passport');
 // Require/Use Passport Local Strategy, defined in user model
 var LocalStrategy = require('passport-local').Strategy;
 var Users = require('./models/users');
+var Articles = require('./models/articles');
 
 var authRouter = require('./routes/auth');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var articlesRouter = require('./routes/articles');
 // import auth routes
 var apiAuthRouter = require('./routes/api/auth');
 // import the `users` routes as `apiUsersRouter` variable
 var apiUsersRouter = require('./routes/api/users');
+var apiArticlesRouter = require('./routes/api/articles');
 
 
 var app = express();
@@ -82,7 +85,20 @@ app.use(function(req, res, next) {
 app.use(function(req, res, next) {
   /* *** ALLOW ACCESS TO EVERYTHING *** */
   /* (used heavily in later lessons) */
-  // return next();
+  return next();
+
+  // CORS policy to link to ng-cms
+  // app.use(function(req, res, next) {
+  //   res.header('Access-Control-Allow-Credentials', true);
+  //   res.header("Access-Control-Allow-Origin", "*");
+  //   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  //   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+  //   if ('OPTIONS' == req.method) {
+  //     res.send(200);
+  //   } else {
+  //     next();
+  //   }
+  // });
 
   // array of universal access to endpoints
   // (exact matches only)
@@ -123,12 +139,14 @@ app.use(function(req, res, next) {
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
+app.use('./articles', articlesRouter);
 app.use('/api/auth', apiAuthRouter);
 // any URL that starts with `/api/users` will look into
 // `the /api/users.js` (imported as `apiUsersRouter`)
 // file to complete the request.
 // then bind that route to a URL endpoint
 app.use('/api/users', apiUsersRouter);
+app.use('/api/articles', apiArticlesRouter);
 // catch 404 and forward to error handler
 app.use(function(err, req, res, next) {
   next(createError(404));
