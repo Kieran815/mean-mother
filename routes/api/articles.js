@@ -159,8 +159,8 @@ module.exports = router;
 
 
 // CREATE TEST (2 Instances)
-// curl -d '{"slug":"test2@example.com", "title":"testarticle2", "description": "Bob", "keywords": "smith"}' -H "Content-Type: application/json" -X POST http://localhost:3000/api/articles
-// curl -d '{"slug":"test3@example.com", "title":"testarticle3", "description": "Sally", "keywords": "Smith"}' -H "Content-Type: application/json" -X POST http://localhost:3000/api/articles
+// curl -d '{"slug":"test2_example", "title":"testarticle2", "description": "Bob", "keywords": "smith"}' -H "Content-Type: application/json" -X POST http://localhost:3000/api/articles
+// curl -d '{"slug":"test3_example", "title":"testarticle3", "description": "Sally", "keywords": "Smith"}' -H "Content-Type: application/json" -X POST http://localhost:3000/api/articles
 
 
 // READ ALL TEST

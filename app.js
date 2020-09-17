@@ -16,11 +16,11 @@ var authRouter = require('./routes/auth');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var articlesRouter = require('./routes/articles');
-// import auth routes
-var apiAuthRouter = require('./routes/api/auth');
 // import the `users` routes as `apiUsersRouter` variable
 var apiUsersRouter = require('./routes/api/users');
 var apiArticlesRouter = require('./routes/api/articles');
+// import auth routes
+var apiAuthRouter = require('./routes/api/auth');
 
 
 var app = express();
@@ -104,7 +104,8 @@ app.use(function(req, res, next) {
   // (exact matches only)
   var whitelist = [
     '/',
-    '/auth'
+    '/auth',
+    '/articles'
   ];
 
   // if requested endpoint is ON the whitelist...
@@ -116,7 +117,8 @@ app.use(function(req, res, next) {
   // allow access to dynamic endpoints
   var subs = [
     '/public/',
-    '/api/auth/'
+    '/api/auth/',
+    '/articles'
   ];
 
   // allow access to sub-routes (i.e. - `/api/auth/login` or `/api/auth/logout`)
@@ -139,7 +141,7 @@ app.use(function(req, res, next) {
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
-app.use('./articles', articlesRouter);
+app.use('/articles', articlesRouter);
 app.use('/api/auth', apiAuthRouter);
 // any URL that starts with `/api/users` will look into
 // `the /api/users.js` (imported as `apiUsersRouter`)
