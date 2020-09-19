@@ -1,9 +1,8 @@
 nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
   .container
-    a.navbar-brand(href='#') 
-      // Use Font Awesome for a generic logo
-      i.fas.fa-asterisk
-      |&nbsp;MY API
+    a.navbar-brand(href='/')
+      i.fas.fa-power-off.fa-2x
+      |&nbsp;Kieran M. Milligan
     button.navbar-toggler(
       type='button' 
       data-toggle='collapse' 
@@ -15,7 +14,7 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
       span.navbar-toggler-icon
     #navbarSupportedContent.collapse.navbar-collapse
       ul.navbar-nav.ml-auto
-        li.nav-item.active
+        li.nav-item
           a.nav-link(href='/')
             | Home 
             span.sr-only (current)
@@ -27,5 +26,7 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
         else
           li.nav-item
             a.nav-link(href='/users/app') Users
+          li.nav-item
+            a.nav-link(href='/articles/app') Articles
           li.nav-item
             a.nav-link(href='/auth/logout') Logout

@@ -1,4 +1,5 @@
 var articlesApp = (function() {
+
   // function to call api for data
   function viewArticles() {
     // assign var to api location
@@ -24,38 +25,37 @@ var articlesApp = (function() {
       for (let i = 0; i < articles.length; i++) {
         rows = rows + `<tr>
           <td>
-            <a href="#view-${articles[i]['_id']}">${articles[i]["title"]}, ${articles[i]["description"]}</a>
+            <a href="#view-${articles[i]['_id']}">${articles[i]['title']}</a>
           </td>
-          <td>${articles[i]["keywords"]}</td>
-          <td>${articles[i]["body"]}</td>
-          <td>${articles[i]["published"]}</td>
+          <td>${articles[i]['keywords']}</td>
+          <td>`
+            +
+            (articles[i]['created'] ? `${articles[i]['created'].slice(0, 19).replace('T', ' ')}` : `No Publication Date Set`)
+            +`
+          </td>
         </tr>`;
       }
 
-      table = `
-        <div class="card">
-          <div class="card-header clearfix">
-            <h2 class="h3 float-left">Articles</h2>
-            <div class="float-right">
-              <a href="#create" class="btn btn-primary">New Article</a>
-            </div>
-          </div>
-          <div class="table-responsive">
-            <table class="table table-striped table-hover table-bordered">
-              <thead>
-                <tr>
-                  <td>Title:</td>
-                  <td>Description:</td>
-                  <td>Keywords:</td>
-                  <td>Body:</td>
-                  <td>Published:</td>
-                </tr>
-              </thead>
-              <tbody>${rows}</tbody>
-            </table>
+      table = `<div class="card">
+        <div class="card-header clearfix">
+          <h2 class="h3 float-left">Posts</h2>
+          <div class="float-right">
+            <a href="#create" class="btn btn-primary">New Post</a>
           </div>
         </div>
-      `;
+        <div class="table-responsive">
+          <table class="table table-striped table-hover table-bordered">
+            <thead>
+              <tr>
+                <td>Title</td>
+                <td>Description</td>
+                <td>Date Published</td>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>`;
       
       app.innerHTML = table;
     }
@@ -67,39 +67,40 @@ var articlesApp = (function() {
     var form = `
       <div class="card">
         <div class="card-header clearfix">
-          <h2 class="h3 float-left">Create a New Article</h2>
+          <h2 class="h3 float-left">New Post</h2>
           <div class="float-right">
             <a href="#" class="btn btn-primary">Cancel</a>
           </div>
         </div>
         <div class="card-body">
-          <form  id="createArticle" class="card-body">
+          <form id="createArticle" class="card-body">
             <div id="formMsg" class="alert alert-danger text-center">Your form has errors</div>
-
             <div class="row">
               <div class="form-group col-md-6">
-                <label for="title">First Name</label>
+                <label for="title">Title</label>
                 <input type="text" id="title" name="title" class="form-control" required>
               </div>
-
               <div class="form-group col-md-6">
-                <label for="description">Last Name</label>
-                <input type="text" id="description" name="description" class="form-control" required>
+                <label for="published">Publish On</label>
+                <input type="datetime-local" id="published" name="published" class="form-control" required>
               </div>
             </div>
-
+            <div class="row">
+              <div class="form-group col-md">
+                <label for="body">Body</label>
+                <textarea id="body" name="body" class="form-control" rows="6" required></textarea>
+              </div>
+            </div>
             <div class="row">
               <div class="form-group col-md-6">
-                <label for="keywords">keywords</label>
+                <label for="description">Summary</label>
+                <input type="text" id="description" name="description" class="form-control" required>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="keywords">Keywords (separated by commas)</label>
                 <input type="text" id="keywords" name="keywords" class="form-control" required>
               </div>
-
-              <div class="form-group col-md-6">
-                <label for="body">body</label>
-                <input type="body" id="body" name="body" class="form-control" required>
-              </div>
             </div>
-
             <div class="text-right">
               <input type="submit" value="Submit" class="btn btn-lg btn-primary btn-sm-block">
             </div>
@@ -131,16 +132,18 @@ var articlesApp = (function() {
 
       card = `<div class="card">
         <div class="card-header clearfix">
-          <h2 class="h3 float-left">${data.article.title} ${data.article.description}</h2>
+          <h2 class="h3 float-left">${data.article.title}</h2>
           <div class="float-right">
             <a href="#edit-${data.article._id}" class="btn btn-primary">Edit</a>
           </div>
         </div>
         <div class="card-body">
-          <div>${data.article.keywords}</div>
-          <div>${data.article.body}</div>
+          <div class="blockquote">${data.article.body}</div>
+          <br>
+          <div>Tagged: <em>${data.article.keywords}</em></div>
         </div>
-      </div>`;
+      </div>
+      `;
 
       app.innerHTML = card;
     }
@@ -163,53 +166,59 @@ var articlesApp = (function() {
       let data = JSON.parse(xhr.response);
       // assign `value` from `data` to form elements to
       // pre-populate forms
-      var form =  `
+      var form = `
         <div class="card">
           <div class="card-header clearfix">
-            <h2 class="h3 float-left">Edit</h2>
+            <h2 class="h3 float-left">Edit Post</h2>
             <div class="float-right">
               <a href="#" class="btn btn-primary">Cancel</a>
             </div>
           </div>
           <div class="card-body">
             <form id="editArticle" class="card-body">
-              <input type="hidden" id="_id" name="_id" value="${data.article._id}">
               <div id="formMsg" class="alert alert-danger text-center">Your form has errors</div>
-
               <div class="row">
                 <div class="form-group col-md-6">
-                  <label for="title">First Name</label>
+                  <label for="title">Title</label>
                   <input type="text" id="title" name="title" class="form-control" value="${data.article.title}" required>
                 </div>
-
                 <div class="form-group col-md-6">
-                  <label for="description">Last Name</label>
-                  <input type="text" id="description" name="description" class="form-control" value="${data.article.description}" required>
+                  <label for="published">Published On</label>
+                  <input type="datetime-local" id="published" name="published" class="form-control" value="${data.article.created}" required>
                 </div>
               </div>
-
+              <div class="row">
+                <div class="form-group col-md">
+                  <label for="body">Body</label>
+                  <textarea id="body" name="body" class="form-control" rows="6" required>${data.article.body}</textarea>
+                </div>
+              </div>
               <div class="row">
                 <div class="form-group col-md-6">
-                  <label for="keywords">keywords</label>
+                  <label for="description">Summary</label>
+                  <input type="text" id="description" name="description" class="form-control" value="${data.article.description}" required>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="keywords">Keywords (separated by commas)</label>
                   <input type="text" id="keywords" name="keywords" class="form-control" value="${data.article.keywords}" required>
                 </div>
-
-                <div class="form-group col-md-6">
-                  <label for="body">body</label>
-                  <input type="body" id="body" name="body" class="form-control" value="${data.article.body}" required>
-                </div>
               </div>
-
+              <div>
+                <input type="hidden" id="_id" name="_id" class="form-control" value="${data.article._id}" required>
+              </div>
+              <div>
+                <input type="hidden" id="created" name="created" class="form-control" value="${data.article.created}" required>
+              </div>
               <div class="text-right">
                 <input type="submit" value="Submit" class="btn btn-lg btn-primary btn-sm-block">
               </div>
             </form>
           </div>
+          <div>
+            <a href="#delete-${data.article._id}" class="text-danger">Delete</a>
+          </div>
         </div>
-        <div>
-          <a href="#delete-${data.article._id}" class="text-danger">Delete</a>
-        </div>
-      `;
+  `;
 
       app.innerHTML=form;
       processRequest('editArticle', '/api/articles', 'PUT')
@@ -241,7 +250,7 @@ var articlesApp = (function() {
       xhr.onload = function() {
         let data = JSON.parse(xhr.response);
         if (data.success === true) {
-          window.location.href = '/';
+          window.location.href = '/articles/app';
         } else {
           document.getElementById('formMsg').style.display = 'block';
         }
@@ -268,27 +277,26 @@ var articlesApp = (function() {
       let card = '';
 
       card = `<div class="card bg-transparent border-danger text-danger bg-danger">
-        <div class="card-header bg-transparent border-danger">
-          <h2 class="h3 text-center">Your About to Delete a Article</h2>
+      <div class="card-header bg-transparent border-danger">
+        <div class="float-right">
+        <a href="#" class="btn btn-primary">Cancel</a>
         </div>
-        <div class="card-body text-center">
-          <div>
-            Are you sure you want to delete
-            <strong>${data.article.title} ${data.article.description}</strong>
-          </div>
-
-          <div>keywords: <strong>${data.article.keywords}</strong></div>
-          <div>body: <strong>${data.article.body}</strong></div>
-
-          <div class="text-center">
-            <br>
-            <a onclick="articlesApp.deleteArticle('${data.article._id}');" class="btn btn-lg btn-danger text-white">
-              Yes delete ${data.article.keywords}
-            </a>
-          </div>
-
+      <h2 class="h3 text-center">You're deleting this article</h2>
         </div>
-      </div>`;
+      <div class="card-body text-center">
+        <div>
+          Are you sure you want to delete
+          <strong>${data.article.title}</strong>
+        </div>
+        <div>Summary: <strong>${data.article.description}</strong></div>
+        <div class="text-center">
+          <br>
+          <a onclick="articlesApp.deleteArticle('${data.article._id}');" class="btn btn-lg btn-danger text-white">
+            Yes delete ${data.article.description}
+          </a>
+        </div>
+      </div>
+    </div>`;
 
       app.innerHTML = card;
     }
@@ -318,6 +326,7 @@ var articlesApp = (function() {
   }
 
   return {
+
     load: function() {
       // alert('LOADED')
       let hash = window.location.hash;
