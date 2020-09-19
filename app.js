@@ -85,7 +85,7 @@ app.use(function(req, res, next) {
 app.use(function(req, res, next) {
   /* *** ALLOW ACCESS TO EVERYTHING *** */
   /* (used heavily in later lessons) */
-  return next();
+  // return next();
 
   // CORS policy to link to ng-cms
   // app.use(function(req, res, next) {
@@ -105,7 +105,6 @@ app.use(function(req, res, next) {
   var whitelist = [
     '/',
     '/auth',
-    '/articles'
   ];
 
   // if requested endpoint is ON the whitelist...
@@ -117,8 +116,7 @@ app.use(function(req, res, next) {
   // allow access to dynamic endpoints
   var subs = [
     '/public/',
-    '/api/auth/',
-    '/articles'
+    '/api/auth/'
   ];
 
   // allow access to sub-routes (i.e. - `/api/auth/login` or `/api/auth/logout`)
